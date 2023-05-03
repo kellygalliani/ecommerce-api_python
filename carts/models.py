@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Cart(models.Model):
     class Meta:
         ordering = ("id",)
@@ -11,12 +12,11 @@ class Cart(models.Model):
         "products.Product",
         related_name="cart",
         through="carts.CartProducts",
-        null=True,
-        blank=True
+        blank=True,
     )
 
 
 class CartProducts(models.Model):
-    cart_id = models.ForeignKey("carts.Cart", on_delete=models.CASCADE)
-    product_id = models.ForeignKey("products.Product", on_delete=models.CASCADE)
+    cart = models.ForeignKey("carts.Cart", on_delete=models.CASCADE)
+    product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
