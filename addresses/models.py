@@ -2,7 +2,6 @@ from django.db import models
 
 class Address(models.Model):
     
-    id = models.UUIDField(primary_key=True, editable=False)
     street = models.CharField(max_length=255)
     number = models.CharField(max_length=50)
     po = models.CharField(max_length=20)
