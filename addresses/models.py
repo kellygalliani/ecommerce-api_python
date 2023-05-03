@@ -1,3 +1,12 @@
 from django.db import models
 
-# Create your models here.
+class Address(models.Model):
+    
+    id = models.UUIDField(primary_key=True, editable=False)
+    street = models.CharField(max_length=255)
+    number = models.CharField(max_length=50)
+    po = models.CharField(max_length=20)
+    city = models.CharField(max_length=50)
+    country = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    complement = models.CharField(max_length=255)
