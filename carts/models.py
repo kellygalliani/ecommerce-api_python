@@ -5,7 +5,7 @@ class Cart(models.Model):
     class Meta:
         ordering = ("id",)
 
-    total_price = models.DecimalField(max_digits=9, decimal_places=2)
+    total_price = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     items = models.IntegerField(default=0)
 
     products = models.ManyToManyField(
