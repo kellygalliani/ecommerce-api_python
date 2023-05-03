@@ -22,3 +22,7 @@ class Order(models.Model):
     user = models.ForeignKey(
         "users.User", on_delete=models.PROTECT, related_name="orders"
     )
+    product = models.ManyToManyField(
+        "products.Product",
+        related_name="order",
+    )
