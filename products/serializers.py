@@ -34,7 +34,8 @@ class ProductInCartSerializer(serializers.ModelSerializer):
             "name",
             "category",
             "price",
-            "seller_id"
+            "seller_id",
+            "availability",
         ]
         read_only_fields = ["id"]
         exclude = ["stock"]
