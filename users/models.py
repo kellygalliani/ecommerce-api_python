@@ -8,7 +8,7 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, editable=False)
     email = models.EmailField(max_length=255, unique=True)
     is_seller = models.BooleanField(default=False)
-    cart = models.ForeignKey(
+    cart = models.OneToOneField(
         "carts.Cart", 
         on_delete=models.CASCADE, 
         related_name="user"
