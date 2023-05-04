@@ -25,4 +25,11 @@ class Order(models.Model):
     product = models.ManyToManyField(
         "products.Product",
         related_name="order",
+        through="orders.OrderProducts",
     )
+
+
+class OrderProducts(models.Model):
+    order = models.ForeignKey("orders.Order", on_delete=models.CASCADE)
+    product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)

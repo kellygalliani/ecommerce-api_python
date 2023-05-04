@@ -10,7 +10,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "category",
             "stock",
             "price",
-            "availability"
+            "availability",
             "seller_id"
         ]
         read_only_fields = ["id"]
@@ -21,7 +21,12 @@ class ProductSerializer(serializers.ModelSerializer):
         def update(self, instance, validated_data):
             for key, value in validated_data.items():
                 setattr(instance, key, value)
-            
+
+            if instance.stock <= 0:
+                instance.availability = False
+            else:
+                instance.availability = True
+
             instance.save()
 
             return instance
