@@ -14,9 +14,9 @@ class AddressSerializer(serializers.ModelSerializer):
             'state', 
             'complement'
         ]
-    
-    def create(self, validated_data: dict) -> Address:
-        return Address.objects.create(**validated_data)
+        read_only_fields = [
+            "id"
+        ]
 
     def update(self, instance: Address, validated_data: dict) -> Address:
         for key, value in validated_data.items():
