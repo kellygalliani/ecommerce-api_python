@@ -6,6 +6,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
+            "id",
             "name",
             "category",
             "stock",
@@ -33,6 +34,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductInCartSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Product
         fields = [
@@ -40,7 +42,6 @@ class ProductInCartSerializer(serializers.ModelSerializer):
             "category",
             "price",
             "seller_id",
-            "availability",
+            "availability"
         ]
         read_only_fields = ["id"]
-        exclude = ["stock"]

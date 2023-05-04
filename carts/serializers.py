@@ -2,58 +2,46 @@ from rest_framework import serializers
 from .models import Cart, CartProducts
 from products.serializers import ProductInCartSerializer
 from products.models import Product
+from django.forms.models import model_to_dict
 
 
 class CartSerializer(serializers.ModelSerializer):
     products = ProductInCartSerializer(many=True)
-
     class Meta:
         model = Cart
         fields = ['id', 'total_price', 'items', 'products']
-        extra_kwargs = {
-            'products': {'source':'products'}
-        }
         read_only_fields = ['id']
         depth = 1
 
-    def create(self, validated_data: dict, context) -> Cart:
+    def create(self, validated_data: dict) -> Cart:
         return Cart.objects.create(**validated_data)
 
-    def update(self, instance, validated_data: dict, context):
-        user = context['request'].user
-        user_cart = Cart.objects.get(user=user)
+    def update(self, instance, validated_data):
+        product = Product.objects.get(id=int(validated_data['products']))
 
-        products_in_cart = {cp.product_id: cp for cp in user_cart.cartproducts_set.all()}
+        quantity = validated_data['context']['quantity']
 
-        products = validated_data.pop('products', [])
+        found_product = CartProducts.objects.filter(cart_id=instance.id).filter(product_id=product).first()
 
-        total_price = 0
+        if found_product:
+            found_product.quantity += quantity
+            found_product.save()
+        else:
+            instance.products.add(product)
+            product_in_cart = CartProducts.objects.filter(cart_id=instance.id).filter(product_id=product).first()
+            product_in_cart.quantity = quantity
+            product_in_cart.save()
 
-        for product_data in products:
-            product_id = product_data['id']
-            product_price = product_data['total_price']
-
-            total_price += product_price
-
-            quantity = product_data.get('quantity', 1)
-
-            if product_id in products_in_cart:
-                cart_product = products_in_cart[product_id]
-                cart_product.quantity += quantity
-                cart_product.save()
-            else:
-                product = Product.objects.get(pk=product_id)
-                cart_product = CartProducts.object.create(cart=user_cart, product=product, quantity=quantity)
-
-        for cart_product in products_in_cart.values():
-            if cart_product.quantity == 0:
-                    cart_product.delete()
-
-        user_cart = Cart.objects.get(pk=user_cart.pk)
-        cart_items = user_cart.cartproducts_set.all().count()
+        cart = CartProducts.objects.filter(cart_id=instance.id)
         
-        instance.items = cart_items
-        instance.total_price = total_price
+        price = 0
+        items = 0
+        for item in instance.cartproducts_set.all():
+            price += item.quantity * item.product.price
+            items += item.quantity
+
+        instance.total_price = price
+        instance.items = items
         instance.save()
 
         return instance
