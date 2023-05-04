@@ -18,7 +18,6 @@ class OrderView(generics.ListCreateAPIView):
 
     # queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    
 
     # def get_queryset(self):
     #     return Cart.objects.filter(user=self.request.user)
