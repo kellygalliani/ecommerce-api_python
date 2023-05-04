@@ -8,12 +8,17 @@ from .models import Cart
 from .serializers import CartSerializer
 
 
-class CartView(generics.RetrieveUpdateAPIView):
-    serializer_class = CartSerializer
+class CartView(generics.UpdateAPIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return Cart.objects.filter(user=self.request.user)
+    lookup_field = 'product_id'
+    serializer_class = CartSerializer
+
+    def get_object(self):
+        return Cart.objects.get(user=self.request.user)
     
     def perform_update(self, serializer):
-        serializer.save(user=self.request.user, context={'request': self.request})
+        products = self.kwargs.get('product_id')
+        quantity = self.request.data
+        serializer.save(user=self.request.user, products=products, context=quantity)
