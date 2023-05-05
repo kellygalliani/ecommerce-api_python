@@ -6,6 +6,8 @@ from users.models import User
 from products.models import Product
 from products.serializers import ProductInCartSerializer
 from users.serializers import UserSerializer
+from rest_framework.exceptions import ValidationError
+
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -24,6 +26,10 @@ class OrderSerializer(serializers.ModelSerializer):
         cart = Cart.objects.get(id=validated_data["user"].cart.id)
 
         sellers = []
+
+        if cart.items == 0:
+            raise ValidationError({"message": 'O carrinho está vazio.'})
+        
         for item in cart.cartproducts_set.all():
             product = Product.objects.get(id=item.product_id)
 
