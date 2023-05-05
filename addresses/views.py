@@ -10,7 +10,6 @@ from rest_framework.exceptions import NotAuthenticated
 
 class AddressUpdateView(generics.UpdateAPIView):
     queryset = Address.objects.all()
-    print(queryset)
     serializer_class = AddressSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAccountOwnerOrAdmin]
