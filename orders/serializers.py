@@ -45,6 +45,8 @@ class OrderSerializer(serializers.ModelSerializer):
                 if product.seller_id == seller:
                     products_list.append(product)
                     quantity += item.quantity
+                    product.stock = product.stock - item.quantity
+                    product.save()
                     total_price += product.price * item.quantity
 
             order_data = Order.objects.create(**validated_data)
