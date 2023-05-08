@@ -2,19 +2,17 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework import generics
-
 from .serializers import UserSerializer
 from .models import User
 from .permissions import IsAccountOwnerOrAdmin
 
-from drf_spectacular.utils import extend_schema
-
 
 class UserView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
     def get_permissions(self):
             if self.request.method =='POST':
@@ -28,11 +26,11 @@ class UserView(generics.ListCreateAPIView):
         else: 
              user_id = self.request.user.id
              return queryset.filter(id=user_id)
-    
+
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAccountOwnerOrAdmin]
-    
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

@@ -2,9 +2,7 @@ from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
-
 from addresses.permissions import IsAccountOwnerOrAdmin
-
 from .models import Cart
 from .serializers import CartSerializer, CartClearSerializer
 
@@ -29,9 +27,9 @@ class CartView(generics.UpdateAPIView):
 
 
 class CartClearView(generics.UpdateAPIView):
-    queryset = Cart.objects.all()
-    serializer_class = CartClearSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAccountOwnerOrAdmin]
-    lookup_field = 'id'
 
+    queryset = Cart.objects.all()
+    serializer_class = CartClearSerializer
+    lookup_field = 'id'
