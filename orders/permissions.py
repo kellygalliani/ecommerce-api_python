@@ -15,3 +15,8 @@ class IsOrderSellerOrAdmin(permissions.BasePermission):
         except Order.DoesNotExist:
             raise ValueError({'message': 'Order não existe.'})
         return product.seller == request.user
+
+
+class IsSeller(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_seller

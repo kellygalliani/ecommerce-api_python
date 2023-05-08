@@ -1,14 +1,16 @@
-from carts.models import CartProducts, Cart
+from carts.models import Cart
+
 from orders.models import Order, OrderProducts
+
 from rest_framework import serializers
-import ipdb
-from users.models import User
+from rest_framework.exceptions import ValidationError
+
 from products.models import Product
 from products.serializers import ProductInCartSerializer
-from users.serializers import UserSerializer
-from rest_framework.exceptions import ValidationError
+
 from django.core.mail import send_mail
 from django.conf import settings
+
 from .exceptions import NoStockError
 
 
