@@ -30,11 +30,15 @@ class ProductReadAllView(generics.ListCreateAPIView):
         
         return serializer.save(seller=self.request.user)
     
-class ProductDetailsView(generics.UpdateAPIView):
+class ProductDetailsView(generics.RetrieveUpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsProductSellerOrAdmin]
     authentication_classes = [JWTAuthentication]
 
+    def get_permissions(self):
+            if self.request.method in permissions.SAFE_METHODS:
+                return [AllowAny()]
+            return super().get_permissions()
 
 
