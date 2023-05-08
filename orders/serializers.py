@@ -7,6 +7,8 @@ from products.models import Product
 from products.serializers import ProductInCartSerializer
 from users.serializers import UserSerializer
 from rest_framework.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 
@@ -65,6 +67,14 @@ class OrderSerializer(serializers.ModelSerializer):
         cart.total_price = 0
         cart.items = 0
         cart.save()
+
+        send_mail(
+            subject="Ecommerce Order",
+            message=f"O pedido de número:{order_data.id} de valor {order_data.total_price}, foi realizado com sucesso.",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[validated_data["user"].email],
+            fail_silently=False
+        )
 
         return order_data
 
