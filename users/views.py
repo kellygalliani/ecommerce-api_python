@@ -8,18 +8,16 @@ from orders.models import Order
 from .serializers import UserSerializer
 from .models import User
 from .permissions import IsAccountOwnerOrAdmin
-<<<<<<< HEAD
-import uuid
-=======
 
 from drf_spectacular.utils import extend_schema
+
+import uuid
 
 @extend_schema(
     summary="List and create users",
     description="This endpoint allows you to list all users and create new ones.",
     tags=["List and Create Users"]
 )
->>>>>>> 08166c710ac77f59dd69977973c23a39d326deb5
 
 class UserView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
@@ -46,14 +44,11 @@ class UserView(generics.ListCreateAPIView):
              user_id = self.request.user.id
              return queryset.filter(id=user_id)
 
-<<<<<<< HEAD
-=======
 @extend_schema(
     summary="Retrieve, update and delete a user",
     description="This endpoint allows you to retrieve, update and delete a specific user.",
     tags=["Retrieve, update and delete a user"]
 )
->>>>>>> 08166c710ac77f59dd69977973c23a39d326deb5
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]

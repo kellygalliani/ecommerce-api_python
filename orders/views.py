@@ -5,9 +5,6 @@ from rest_framework.exceptions import NotFound
 from orders.models import Order, OrderProducts
 from orders.serializers import OrderSerializer
 from .permissions import IsOrderSellerOrAdmin, IsSeller
-<<<<<<< HEAD
-
-=======
 from drf_spectacular.utils import extend_schema
 from django.shortcuts import get_object_or_404
 
@@ -16,7 +13,6 @@ from django.shortcuts import get_object_or_404
     description="This endpoint allows you to list and create a order.",
     tags=["List and Create a Order"]
 )
->>>>>>> 08166c710ac77f59dd69977973c23a39d326deb5
 
 class OrderView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]

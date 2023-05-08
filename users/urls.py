@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from rest_framework_simplejwt.views import TokenObtainPairView
+from drf_spectacular.utils import extend_schema
 
 @extend_schema(
     summary="Login",
@@ -12,13 +13,7 @@ class LoginView(TokenObtainPairView):
 
 urlpatterns = [
     path("users/", views.UserView.as_view()),
-<<<<<<< HEAD
-    path("users/<pk>/", views.UserDetailView.as_view()),
-    path("users/<pk>/seller", views.UserDetailView.as_view()),
-    path("users/login/", TokenObtainPairView.as_view()),
-=======
     path("users/<uuid:pk>/", views.UserDetailView.as_view()),
     path("users/<uuid:pk>/seller", views.UserDetailView.as_view()),
     path("users/login/", LoginView.as_view()),
->>>>>>> 08166c710ac77f59dd69977973c23a39d326deb5
 ]

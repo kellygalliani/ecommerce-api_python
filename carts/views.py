@@ -3,10 +3,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
 from addresses.permissions import IsAccountOwnerOrAdmin
-<<<<<<< HEAD
-=======
 from drf_spectacular.utils import extend_schema
->>>>>>> 08166c710ac77f59dd69977973c23a39d326deb5
 from .models import Cart
 from .serializers import CartSerializer, CartClearSerializer
 
