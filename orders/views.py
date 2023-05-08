@@ -3,7 +3,7 @@ from rest_framework import generics
 from carts.models import Cart
 from orders.models import Order
 from rest_framework.views import Response, status
-
+from .permissions import IsOrderSellerOrAdmin
 from orders.serializers import OrderSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
@@ -22,3 +22,14 @@ class OrderView(generics.ListCreateAPIView):
         serializer.save(
             user=self.request.user
         )
+
+
+class OrderDetailView(generics.UpdateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsOrderSellerOrAdmin]
+    authentication_classes = [JWTAuthentication]
+    
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return super().partial_update(request, *args, **kwargs)
