@@ -7,9 +7,14 @@ from orders.models import Order, OrderProducts
 from orders.serializers import OrderSerializer
 
 from .permissions import IsOrderSellerOrAdmin, IsSeller
-
+from drf_spectacular.utils import extend_schema
 from django.shortcuts import get_object_or_404
 
+@extend_schema(
+    summary="Orders Routes",
+    description="This endpoint allows you to list and create a order.",
+    tags=["List and Create a Order"]
+)
 
 class OrderView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
@@ -22,6 +27,12 @@ class OrderView(generics.ListCreateAPIView):
             user=self.request.user
         )
 
+
+@extend_schema(
+    summary="Orders Routes",
+    description="This endpoint allows you to update a order.",
+    tags=["Update a Order"]
+)
 
 class OrderDetailView(generics.UpdateAPIView):
     queryset = Order.objects.all()

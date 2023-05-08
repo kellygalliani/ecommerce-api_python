@@ -9,6 +9,11 @@ from .permissions import IsAccountOwnerOrAdmin
 
 from drf_spectacular.utils import extend_schema
 
+@extend_schema(
+    summary="List and create users",
+    description="This endpoint allows you to list all users and create new ones.",
+    tags=["List and Create Users"]
+)
 
 class UserView(generics.ListCreateAPIView):
     queryset = User.objects.all()
@@ -28,7 +33,12 @@ class UserView(generics.ListCreateAPIView):
         else: 
              user_id = self.request.user.id
              return queryset.filter(id=user_id)
-    
+
+@extend_schema(
+    summary="Retrieve, update and delete a user",
+    description="This endpoint allows you to retrieve, update and delete a specific user.",
+    tags=["Retrieve, update and delete a user"]
+)
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
