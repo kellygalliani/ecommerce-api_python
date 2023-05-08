@@ -9,6 +9,7 @@ from users.serializers import UserSerializer
 from rest_framework.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.conf import settings
+from .exceptions import NoStockError
 
 
 
@@ -47,6 +48,10 @@ class OrderSerializer(serializers.ModelSerializer):
                 if product.seller_id == seller:
                     products_list.append(product)
                     quantity += item.quantity
+
+                    if(product.stock == 0 or item.quantity > product.stock):
+                        raise NoStockError({"message": "O produto não tem estoque suficiente."})
+                    
                     product.stock = product.stock - item.quantity
                     product.save()
                     total_price += product.price * item.quantity
