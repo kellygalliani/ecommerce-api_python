@@ -3,9 +3,18 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
 from addresses.permissions import IsAccountOwnerOrAdmin
+<<<<<<< HEAD
+=======
+from drf_spectacular.utils import extend_schema
+>>>>>>> 08166c710ac77f59dd69977973c23a39d326deb5
 from .models import Cart
 from .serializers import CartSerializer, CartClearSerializer
 
+@extend_schema(
+    summary="Cart Routes",
+    description="This endpoint allows you to create and a cart.",
+    tags=["Create and Update a Cart"]
+)
 
 class CartView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]
@@ -25,7 +34,11 @@ class CartView(generics.UpdateAPIView):
         quantity = self.request.data
         serializer.save(user=self.request.user, products=products, context=quantity)
 
-
+@extend_schema(
+    summary="Cart Routes",
+    description="This endpoint allows you to clean a cart.",
+    tags=["Clean a Cart"]
+)
 class CartClearView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAccountOwnerOrAdmin]

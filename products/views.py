@@ -5,8 +5,17 @@ from rest_framework.exceptions import PermissionDenied
 from .serializers import ProductSerializer
 from .models import Product
 from users.permissions import IsProductSellerOrAdmin
+<<<<<<< HEAD
+=======
+from drf_spectacular.utils import extend_schema
+>>>>>>> 08166c710ac77f59dd69977973c23a39d326deb5
 from django.contrib.auth.models import AnonymousUser
 
+@extend_schema(
+    summary="Products Routes",
+    description="This endpoint allows you to list and create a product.",
+    tags=["List and Create a Product"]
+)
 
 class ProductReadAllView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
@@ -29,6 +38,15 @@ class ProductReadAllView(generics.ListCreateAPIView):
         return serializer.save(seller=self.request.user)
 
 
+<<<<<<< HEAD
+=======
+@extend_schema(
+    summary="Products Routes",
+    description="This endpoint allows you to retrieve and update a specific product.",
+    tags=["Retrieve and Update Product"]
+)
+
+>>>>>>> 08166c710ac77f59dd69977973c23a39d326deb5
 class ProductDetailsView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsProductSellerOrAdmin]
     authentication_classes = [JWTAuthentication]

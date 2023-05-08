@@ -3,8 +3,17 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .permissions import IsAccountOwnerOrAdmin
 from .models import Address
 from .serializers import AddressSerializer
+from drf_spectacular.utils import extend_schema
 
+<<<<<<< HEAD
 
+=======
+@extend_schema(
+    summary="Address Route",
+    description="This endpoint allows you to update a address.",
+    tags=["Update a Address"]
+)
+>>>>>>> 08166c710ac77f59dd69977973c23a39d326deb5
 class AddressUpdateView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAccountOwnerOrAdmin]
