@@ -1,11 +1,15 @@
 from rest_framework import generics, permissions
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import PermissionDenied
+
 from .serializers import ProductSerializer
 from .models import Product
-from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from users.permissions import IsProductSellerOrAdmin
-from rest_framework.permissions import AllowAny
+
 from django.contrib.auth.models import AnonymousUser
-from rest_framework.exceptions import PermissionDenied
+
 
 class ProductReadAllView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
@@ -21,6 +25,8 @@ class ProductReadAllView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         if self.request.user == AnonymousUser():
              raise PermissionDenied("Authentication credentials were not provided.")
+        if not self.request.user.is_seller:
+             raise PermissionDenied("Você não é cadastrado como um usuário vendedor.")
         
         return serializer.save(seller=self.request.user)
     

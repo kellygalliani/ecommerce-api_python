@@ -1,8 +1,11 @@
 from rest_framework import serializers
+
+from django.forms.models import model_to_dict
+
 from .models import Cart, CartProducts
+
 from products.serializers import ProductInCartSerializer
 from products.models import Product
-from django.forms.models import model_to_dict
 
 
 class CartSerializer(serializers.ModelSerializer):

@@ -1,12 +1,14 @@
-from django.shortcuts import render
-from .models import User
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .serializers import UserSerializer
-from rest_framework import generics
-from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
+from rest_framework import generics
+
+from .serializers import UserSerializer
+from .models import User
 from .permissions import IsAccountOwnerOrAdmin
+
+from drf_spectacular.utils import extend_schema
+
 
 class UserView(generics.ListCreateAPIView):
     queryset = User.objects.all()

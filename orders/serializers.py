@@ -1,12 +1,17 @@
-from carts.models import CartProducts, Cart
+from carts.models import Cart
+
 from orders.models import Order, OrderProducts
+
 from rest_framework import serializers
-import ipdb
-from users.models import User
+from rest_framework.exceptions import ValidationError
+
 from products.models import Product
 from products.serializers import ProductInCartSerializer
-from users.serializers import UserSerializer
-from rest_framework.exceptions import ValidationError
+
+from django.core.mail import send_mail
+from django.conf import settings
+
+from .exceptions import NoStockError
 
 
 
@@ -45,6 +50,12 @@ class OrderSerializer(serializers.ModelSerializer):
                 if product.seller_id == seller:
                     products_list.append(product)
                     quantity += item.quantity
+
+                    if(product.stock == 0 or item.quantity > product.stock):
+                        raise NoStockError({"message": "O produto não tem estoque suficiente."})
+                    
+                    product.stock = product.stock - item.quantity
+                    product.save()
                     total_price += product.price * item.quantity
 
             order_data = Order.objects.create(**validated_data)
@@ -63,6 +74,14 @@ class OrderSerializer(serializers.ModelSerializer):
         cart.total_price = 0
         cart.items = 0
         cart.save()
+
+        send_mail(
+            subject="Ecommerce Order",
+            message=f"O pedido de número:{order_data.id} de valor {order_data.total_price}, foi realizado com sucesso.",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[validated_data["user"].email],
+            fail_silently=False
+        )
 
         return order_data
 
