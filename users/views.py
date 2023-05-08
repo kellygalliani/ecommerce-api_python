@@ -82,12 +82,14 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
                             user.is_active = False
                             user.save()
          
-        if found_in_done or found_in_progress:
+        elif found_in_done or found_in_progress:
             raise NotAcceptable({"message": "This user has unfinished orders."})
         elif found_in_delivered:
             user = User.objects.get(id=self.kwargs['pk'])
             user.is_active = False
             user.save()
+        else:
+            return super().perform_destroy(instance)
 
 
 class UserActivateView(generics.UpdateAPIView):
