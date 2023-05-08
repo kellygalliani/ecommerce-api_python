@@ -1,6 +1,7 @@
 from rest_framework import permissions
-from .models import Order, OrderProducts
+from .models import OrderProducts
 from products.models import Product
+from rest_framework.exceptions import NotFound
 
 class IsOrderSellerOrAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -12,8 +13,8 @@ class IsOrderSellerOrAdmin(permissions.BasePermission):
         try:
             order = OrderProducts.objects.get(order_id=order_id)
             product = Product.objects.get(id=order.product_id)
-        except Order.DoesNotExist:
-            raise ValueError({'message': 'Order não existe.'})
+        except OrderProducts.DoesNotExist:
+            raise NotFound()
         return product.seller == request.user
 
 

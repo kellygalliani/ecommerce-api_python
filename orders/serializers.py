@@ -10,6 +10,7 @@ from products.serializers import ProductInCartSerializer
 
 from django.core.mail import send_mail
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 from .exceptions import NoStockError
 
@@ -86,6 +87,7 @@ class OrderSerializer(serializers.ModelSerializer):
         return order_data
 
     def update(self, instance: Order, validated_data: dict) -> Order:
+
         for key, value in validated_data.items():
             setattr(instance, key, value)
 

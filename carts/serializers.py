@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from django.forms.models import model_to_dict
+from django.shortcuts import get_object_or_404
 
 from .models import Cart, CartProducts
 
@@ -20,7 +20,7 @@ class CartSerializer(serializers.ModelSerializer):
         return Cart.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        product = Product.objects.get(id=int(validated_data['products']))
+        product = get_object_or_404(Product, id=int(validated_data['products']))
 
         quantity = validated_data['context']['quantity']
 
@@ -28,14 +28,15 @@ class CartSerializer(serializers.ModelSerializer):
 
         if found_product:
             found_product.quantity += quantity
-            found_product.save()
+            if found_product.quantity <= 0:
+                found_product.delete()
+            else:
+                found_product.save()
         else:
             instance.products.add(product)
             product_in_cart = CartProducts.objects.filter(cart_id=instance.id).filter(product_id=product).first()
             product_in_cart.quantity = quantity
             product_in_cart.save()
-
-        cart = CartProducts.objects.filter(cart_id=instance.id)
         
         price = 0
         items = 0
@@ -45,6 +46,23 @@ class CartSerializer(serializers.ModelSerializer):
 
         instance.total_price = price
         instance.items = items
+        instance.save()
+
+        return instance
+
+
+class CartClearSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Cart
+        fields = ['id', 'total_price', 'items', 'products']
+        read_only_fields = ['id']
+        depth = 1
+
+    def update(self, instance, validated_data):
+        instance.products.clear()
+        instance.total_price = 0
+        instance.items = 0
         instance.save()
 
         return instance

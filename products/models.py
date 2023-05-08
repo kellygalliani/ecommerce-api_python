@@ -2,6 +2,10 @@ from django.db import models
 
 
 class Product(models.Model):
+
+    class Meta:
+        ordering = ("id",)
+
     name = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
     stock = models.IntegerField()
