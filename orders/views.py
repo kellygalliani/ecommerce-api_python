@@ -52,7 +52,6 @@ class OrderDetailView(generics.UpdateAPIView):
         kwargs['partial'] = True
         return super().partial_update(request, *args, **kwargs)
     
-
 class BuyedOrderView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
