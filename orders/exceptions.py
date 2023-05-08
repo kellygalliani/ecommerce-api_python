@@ -2,9 +2,10 @@ from rest_framework import status
 from rest_framework.exceptions import APIException ,_get_error_details
 from django.utils.translation import gettext_lazy as _
 
+
 class NoStockError(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
-    default_detail = _('Não há estoque do produto suficiente.')
+    default_detail = _('This product does not have enough stock.')
     default_code = 'invalid'
 
     def __init__(self, detail=None, code=None):
