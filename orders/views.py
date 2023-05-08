@@ -27,7 +27,7 @@ class OrderDetailView(generics.UpdateAPIView):
     serializer_class = OrderSerializer
 
     def get_object(self):
-        order = OrderProducts.objects.get(order_id=self.kwargs['pk'])
+        order = OrderProducts.objects.filter(order_id=self.kwargs['pk']).first()
 
         if not order:
             raise NotFound()

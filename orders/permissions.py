@@ -12,7 +12,7 @@ class IsOrderSellerOrAdmin(permissions.BasePermission):
             return True
         order_id = view.kwargs['pk']
         try:
-            order = OrderProducts.objects.get(order_id=order_id)
+            order = OrderProducts.objects.filter(order_id=order_id).first()
             product = Product.objects.get(id=order.product_id)
         except OrderProducts.DoesNotExist:
             raise NotFound()
