@@ -27,7 +27,7 @@ class OrderSerializer(serializers.ModelSerializer):
         sellers = []
 
         if cart.items == 0:
-            raise ValidationError({"message": 'O carrinho está vazio.'})
+            raise ValidationError({"message": 'Your cart is empty.'})
 
         for item in cart.cartproducts_set.all():
             product = Product.objects.get(id=item.product_id)
