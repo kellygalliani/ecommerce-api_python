@@ -1,7 +1,5 @@
 from rest_framework import serializers
-
 from django.shortcuts import get_object_or_404
-
 from .models import Cart, CartProducts
 from products.serializers import ProductInCartSerializer
 from products.models import Product

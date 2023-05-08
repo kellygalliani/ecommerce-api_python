@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 class NoStockError(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
-    default_detail = _('This product does not have enough stock.')
+    default_detail = _('This product does not have enough items in stock.')
     default_code = 'invalid'
 
     def __init__(self, detail=None, code=None):
