@@ -1,11 +1,14 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import generics
+from rest_framework.exceptions import NotFound
 
-from orders.models import Order
+from orders.models import Order, OrderProducts
 from orders.serializers import OrderSerializer
 
 from .permissions import IsOrderSellerOrAdmin, IsSeller
+
+from django.shortcuts import get_object_or_404
 
 
 class OrderView(generics.ListCreateAPIView):
@@ -25,6 +28,14 @@ class OrderDetailView(generics.UpdateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [IsOrderSellerOrAdmin]
     authentication_classes = [JWTAuthentication]
+
+    def get_object(self):
+        order = OrderProducts.objects.get(order_id=self.kwargs['pk'])
+
+        if not order:
+            raise NotFound()
+
+        return super().get_object()
     
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
