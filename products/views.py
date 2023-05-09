@@ -7,6 +7,8 @@ from .models import Product
 from users.permissions import IsProductSellerOrAdmin
 from drf_spectacular.utils import extend_schema
 from django.contrib.auth.models import AnonymousUser
+from orders.exceptions import NoStockError
+
 
 @extend_schema(
     summary="Products Routes",
@@ -27,6 +29,8 @@ class ProductReadAllView(generics.ListCreateAPIView):
             return super().get_permissions()
 
     def perform_create(self, serializer):
+        if serializer.validated_data.get("stock") <= 0:
+                raise NoStockError("The product must have a stock to be registered.")
         if self.request.user == AnonymousUser():
              raise PermissionDenied("Authentication credentials were not provided.")
         if not self.request.user.is_seller:
