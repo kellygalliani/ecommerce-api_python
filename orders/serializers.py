@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from products.models import Product
 from products.serializers import ProductInCartSerializer
+from users.models import User
 from django.core.mail import send_mail
 from django.conf import settings
 from .exceptions import NoStockError
@@ -82,6 +83,15 @@ class OrderSerializer(serializers.ModelSerializer):
     def update(self, instance: Order, validated_data: dict) -> Order:
 
         for key, value in validated_data.items():
+            if key == 'order_status':
+                user = User.objects.get(id=instance.user_id)
+                send_mail(
+                    subject="Ecommerce Order",
+                    message=f"The status of order {instance.id} has been updated to: {value}",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[user.email],
+                    fail_silently=False
+                )
             setattr(instance, key, value)
 
         instance.save()
