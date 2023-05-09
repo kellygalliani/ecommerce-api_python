@@ -7,8 +7,8 @@ from drf_spectacular.utils import extend_schema
 
 @extend_schema(
     summary="Address Route",
-    description="This endpoint allows you to update a address.",
-    tags=["Update a Address"]
+    description="This endpoint allows you to update an address.",
+    tags=["Update an Address"]
 )
 class AddressUpdateView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]

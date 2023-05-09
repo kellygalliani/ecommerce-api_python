@@ -10,8 +10,8 @@ from django.shortcuts import get_object_or_404
 
 @extend_schema(
     summary="Orders Routes",
-    description="This endpoint allows you to list and create a order.",
-    tags=["List and Create a Order"]
+    description="This endpoint allows you to list and create an order.",
+    tags=["List and Create an Order"]
 )
 
 class OrderView(generics.ListCreateAPIView):
@@ -28,8 +28,8 @@ class OrderView(generics.ListCreateAPIView):
 
 @extend_schema(
     summary="Orders Routes",
-    description="This endpoint allows you to update a order.",
-    tags=["Update a Order"]
+    description="This endpoint allows you to update an order.",
+    tags=["Update an Order"]
 )
 
 class OrderDetailView(generics.UpdateAPIView):
@@ -50,7 +50,13 @@ class OrderDetailView(generics.UpdateAPIView):
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return super().partial_update(request, *args, **kwargs)
-    
+
+@extend_schema(
+    summary="Order Routes",
+    description="This endpoint allows you to list all bought products.",
+    tags=["List Bought Products"]
+)
+
 class BuyedOrderView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -62,6 +68,11 @@ class BuyedOrderView(generics.ListAPIView):
         queryset = Order.objects.filter(user_id=user_id)
         return queryset
     
+@extend_schema(
+    summary="Order Routes",
+    description="This endpoint allows you to list all your sales.",
+    tags=["List Sales"]
+)
 
 class SellingOrderView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
