@@ -148,6 +148,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Projeto Final BackEnd - Grupo 35",
     "DESCRIPTION": "Projeto Ecommerce finalização de módulo",
     "VERSION": "0.0.1",
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 
