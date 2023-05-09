@@ -1,19 +1,12 @@
 from carts.models import Cart
-
 from orders.models import Order, OrderProducts
-
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-
 from products.models import Product
 from products.serializers import ProductInCartSerializer
-
 from django.core.mail import send_mail
 from django.conf import settings
-from django.shortcuts import get_object_or_404
-
 from .exceptions import NoStockError
-
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -34,8 +27,8 @@ class OrderSerializer(serializers.ModelSerializer):
         sellers = []
 
         if cart.items == 0:
-            raise ValidationError({"message": 'O carrinho está vazio.'})
-        
+            raise ValidationError({"message": 'Your cart is empty.'})
+
         for item in cart.cartproducts_set.all():
             product = Product.objects.get(id=item.product_id)
 
@@ -53,8 +46,8 @@ class OrderSerializer(serializers.ModelSerializer):
                     quantity += item.quantity
 
                     if(product.stock == 0 or item.quantity > product.stock):
-                        raise NoStockError({"message": "O produto não tem estoque suficiente."})
-                    
+                        raise NoStockError({"message": "This product does not have enough items in stock."})
+
                     product.stock = product.stock - item.quantity
                     product.save()
                     total_price += product.price * item.quantity
@@ -78,7 +71,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
         send_mail(
             subject="Ecommerce Order",
-            message=f"O pedido de número:{order_data.id} de valor {order_data.total_price}, foi realizado com sucesso.",
+            message=f"The order:{order_data.id} of total {order_data.total_price}, was completed successfully.",
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[validated_data["user"].email],
             fail_silently=False

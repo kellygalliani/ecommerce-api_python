@@ -2,10 +2,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import generics
 from rest_framework.exceptions import NotFound
-
 from orders.models import Order, OrderProducts
 from orders.serializers import OrderSerializer
-
 from .permissions import IsOrderSellerOrAdmin, IsSeller
 from drf_spectacular.utils import extend_schema
 from django.shortcuts import get_object_or_404
@@ -19,8 +17,8 @@ from django.shortcuts import get_object_or_404
 class OrderView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = OrderSerializer
 
+    serializer_class = OrderSerializer
 
     def perform_create(self, serializer):
         serializer.save(
@@ -35,13 +33,14 @@ class OrderView(generics.ListCreateAPIView):
 )
 
 class OrderDetailView(generics.UpdateAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
     permission_classes = [IsOrderSellerOrAdmin]
     authentication_classes = [JWTAuthentication]
 
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
     def get_object(self):
-        order = OrderProducts.objects.get(order_id=self.kwargs['pk'])
+        order = OrderProducts.objects.filter(order_id=self.kwargs['pk']).first()
 
         if not order:
             raise NotFound()
@@ -55,6 +54,7 @@ class OrderDetailView(generics.UpdateAPIView):
 class BuyedOrderView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+
     serializer_class = OrderSerializer
 
     def get_queryset(self):
@@ -66,6 +66,7 @@ class BuyedOrderView(generics.ListAPIView):
 class SellingOrderView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsSeller]
+
     serializer_class = OrderSerializer
 
     def get_queryset(self):
