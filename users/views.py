@@ -1,6 +1,5 @@
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 from rest_framework.exceptions import NotAcceptable
 
@@ -12,7 +11,10 @@ from .permissions import IsAccountOwnerOrAdmin
 
 from drf_spectacular.utils import extend_schema
 
-import uuid
+from .utils import is_valid_uuid
+from rest_framework.response import Response
+from rest_framework import status
+
 
 @extend_schema(
     summary="List and create users",
@@ -53,6 +55,11 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+        
+    def get(self, request, *args, **kwargs):
+        if not is_valid_uuid(kwargs['pk']):
+            return Response({"message": "Invalid UUID"}, status=status.HTTP_400_BAD_REQUEST)
+        return super().get(request, *args, **kwargs)
 
     def perform_destroy(self, instance):
         user = User.objects.filter(id=self.kwargs['pk']).first()
@@ -91,6 +98,12 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return super().perform_destroy(instance)
 
+
+@extend_schema(
+    summary="Activate a User",
+    description="This endpoint allows you to list all users and create new ones.",
+    tags=["Activate a User"]
+)
 
 class UserActivateView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]
