@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ParseError
 from addresses.permissions import IsAccountOwnerOrAdmin
 from drf_spectacular.utils import extend_schema
 from .models import Cart
@@ -29,7 +29,10 @@ class CartView(generics.UpdateAPIView):
             raise NotFound()
 
         quantity = self.request.data
-        serializer.save(user=self.request.user, products=products, context=quantity)
+        if quantity:
+            serializer.save(user=self.request.user, products=products, context=quantity)
+        else:
+            raise ParseError("You must inform a valid quantity for the item.")
 
 @extend_schema(
     summary="Cart Routes",
