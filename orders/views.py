@@ -6,7 +6,6 @@ from orders.models import Order, OrderProducts
 from orders.serializers import OrderSerializer
 from .permissions import IsOrderSellerOrAdmin, IsSeller
 from drf_spectacular.utils import extend_schema
-from django.shortcuts import get_object_or_404
 
 @extend_schema(
     summary="Orders Routes",

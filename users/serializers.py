@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+from rest_framework.exceptions import NotAcceptable
 from .models import User
+from orders.models import Order, OrderProducts
+from products.models import Product
 from carts.models import Cart
 from addresses.models import Address
 from addresses.serializers import AddressSerializer
@@ -57,6 +60,29 @@ class UserSerializer(serializers.ModelSerializer):
         password = validated_data.pop("password", None)
 
         for key, value in validated_data.items():
+            if key == "is_seller" and value == False:
+                user = instance
+
+                if user.is_seller:
+                    products = Product.objects.filter(seller_id=user.id)
+                    in_progress_order_found = False
+                    if products:
+                        for product in products:
+                            orders = OrderProducts.objects.filter(product_id=product.id)
+                            for order in orders:
+                                in_started_order = Order.objects.filter(id=order.order_id).filter(order_status="PEDIDO REALIZADO").first()
+                                in_progress_order = Order.objects.filter(id=order.order_id).filter(order_status="PEDIDO REALIZADO").first()
+                                if in_started_order or in_progress_order:
+                                    in_progress_order_found = True
+                                else:
+                                    product.stock = 0
+                                    product.availability = False
+                                    product.save()
+                            if in_progress_order_found:
+                                raise NotAcceptable({"message": "This seller has in progress orders."})
+                            if not in_progress_order_found:
+                                user.is_seller = False
+                                user.save()
             setattr(instance, key, value)
 
         if password:

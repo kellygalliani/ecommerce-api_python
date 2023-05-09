@@ -22,6 +22,7 @@ from rest_framework import status
     tags=["List and Create Users"]
 )
 
+
 class UserView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -49,13 +50,13 @@ class UserView(generics.ListCreateAPIView):
     tags=["Retrieve, update and delete a user"]
 )
 
+
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAccountOwnerOrAdmin]
-
     queryset = User.objects.all()
     serializer_class = UserSerializer
-        
+
     def get(self, request, *args, **kwargs):
         if not is_valid_uuid(kwargs['pk']):
             return Response({"message": "Invalid UUID"}, status=status.HTTP_400_BAD_REQUEST)
@@ -71,24 +72,27 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         if user.is_seller:
             if found_in_done or found_in_progress:
                 raise NotAcceptable({"message": "This user has unfinished orders."})
+
             products = Product.objects.filter(seller_id=user.id)
+            in_progress_order_found = False
+
             if products:
                 for product in products:
                     orders = OrderProducts.objects.filter(product_id=product.id)
                     for order in orders:
-                        in_started_order = Order.objects.filter(id=order.id).filter(order_status="PEDIDO REALIZADO").first()
-                        in_progress_order = Order.objects.filter(id=order.id).filter(order_status="PEDIDO REALIZADO").first()
-
+                        in_started_order = Order.objects.filter(id=order.order_id).filter(order_status="PEDIDO REALIZADO").first()
+                        in_progress_order = Order.objects.filter(id=order.order_id).filter(order_status="PEDIDO REALIZADO").first()
                         if in_started_order or in_progress_order:
-                            raise NotAcceptable({"message": "This seller has in progress orders."})
+                            in_progress_order_found = True
                         else:
                             product.stock = 0
                             product.availability = False
                             product.save()
-
-                            user.is_active = False
-                            user.save()
-         
+                    if in_progress_order_found:
+                        raise NotAcceptable({"message": "This seller has in progress orders."})
+                    if not in_progress_order_found:
+                        user.is_active = False
+                        user.save()
         elif found_in_done or found_in_progress:
             raise NotAcceptable({"message": "This user has unfinished orders."})
         elif found_in_delivered:
@@ -98,12 +102,12 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return super().perform_destroy(instance)
 
-
 @extend_schema(
     summary="Activate a User",
     description="This endpoint allows you to list all users and create new ones.",
     tags=["Activate a User"]
 )
+
 
 class UserActivateView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]
