@@ -9,4 +9,4 @@ class Address(models.Model):
     city = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
-    complement = models.CharField(max_length=255)
+    complement = models.CharField(max_length=255, null=True, blank=True, default=None)
