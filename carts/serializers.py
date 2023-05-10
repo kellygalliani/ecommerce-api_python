@@ -27,7 +27,6 @@ class CartSerializer(serializers.ModelSerializer):
         for product in representation['products']:
             product.pop('stock', None)
             product.pop('availability', None)
-            product.pop('quantity', None)
         return representation
 
     def create(self, validated_data: dict) -> Cart:
