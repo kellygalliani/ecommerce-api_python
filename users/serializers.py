@@ -68,10 +68,20 @@ class UserSerializer(serializers.ModelSerializer):
                     in_progress_order_found = False
                     if products:
                         for product in products:
-                            orders = OrderProducts.objects.filter(product_id=product.id)
+                            orders = OrderProducts.objects.filter(
+                                product_id=product.id
+                            )
                             for order in orders:
-                                in_started_order = Order.objects.filter(id=order.order_id).filter(order_status="PEDIDO REALIZADO").first()
-                                in_progress_order = Order.objects.filter(id=order.order_id).filter(order_status="PEDIDO REALIZADO").first()
+                                in_started_order = (
+                                    Order.objects.filter(id=order.order_id)
+                                    .filter(order_status="PEDIDO REALIZADO")
+                                    .first()
+                                )
+                                in_progress_order = (
+                                    Order.objects.filter(id=order.order_id)
+                                    .filter(order_status="PEDIDO REALIZADO")
+                                    .first()
+                                )
                                 if in_started_order or in_progress_order:
                                     in_progress_order_found = True
                                 else:
@@ -79,7 +89,11 @@ class UserSerializer(serializers.ModelSerializer):
                                     product.availability = False
                                     product.save()
                             if in_progress_order_found:
-                                raise NotAcceptable({"message": "This seller has in progress orders."})
+                                raise NotAcceptable(
+                                    {
+                                        "message": "This seller has in progress orders."
+                                    }
+                                )
                             if not in_progress_order_found:
                                 user.is_seller = False
                                 user.save()
