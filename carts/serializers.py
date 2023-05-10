@@ -6,12 +6,25 @@ from products.models import Product
 
 
 class CartSerializer(serializers.ModelSerializer):
-    products = ProductInCartSerializer(many=True)
+    # products = ProductInCartSerializer(many=True)
     class Meta:
         model = Cart
         fields = ['id', 'total_price', 'items', 'products']
         read_only_fields = ['id']
         depth = 1
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        products = representation['products']
+        cart = instance
+        updated_products = []
+        for product_data in products:
+            product_id = product_data['id']
+            product = Product.objects.get(id=product_id)
+            product_data['quantity'] = ProductInCartSerializer(product, context={'cart': cart}).data['quantity']
+            updated_products.append(product_data)
+        representation['products'] = updated_products
+        return representation
 
     def create(self, validated_data: dict) -> Cart:
         return Cart.objects.create(**validated_data)

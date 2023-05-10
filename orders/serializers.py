@@ -22,6 +22,12 @@ class OrderSerializer(serializers.ModelSerializer):
         }
         depth = 1
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        for product in representation['product']:
+            product.pop('quantity', None)
+        return representation
+
     def create(self, validated_data: dict) -> Order:
         cart = Cart.objects.get(id=validated_data["user"].cart.id)
 
