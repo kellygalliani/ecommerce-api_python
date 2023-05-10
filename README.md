@@ -129,6 +129,7 @@ python manage.py runserver
   - **password**: string.
   - **email**: string.
   - **is_seller**: default=false.
+  - **is_superuser**: default=false.
   - **address**: {
     **street**: string,
     **number**: string,
@@ -247,12 +248,6 @@ python manage.py runserver
   "address": ["This field is required."]
 }
 ```
-
-#
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-{falta criar user adm}
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ### POST: /api/users/login/
 
@@ -517,9 +512,7 @@ python manage.py runserver
 
 ### DELETE: /api/users/id/
 
-- É possível deletar um usuário por id:
-
-  - **username**: string.
+- É possível deletar um usuário por id
 
 - A API acusa erro caso o usuário não exista.
 
@@ -881,15 +874,6 @@ python manage.py runserver
 
 - É possível criar ordens caso o carrinho tenha produtos inseridos
 - Não há corpo na requisição
-
-**Exemplo de retorno**:
-
-```json
-{
-  erro na criação de order
-}
-```
-
 - Caso o carrinho esteja vazio:
 
 **Exemplo de retorno**:
@@ -1110,11 +1094,25 @@ python manage.py runserver
 
 ### PATCH: /api/users/orders/id/
 
+- É possível editar o status do pedido.
+
 **Exemplo de retorno**:
 
 ```json
 {
-  deu erro na aplicação
+  "id": 1,
+  "order_status": "ENTREGUE",
+  "total_price": "4000.00",
+  "created_at": "2023-05-10T16:49:58.468329Z",
+  "product": [
+    {
+      "id": 1,
+      "name": "Produto Apresentacao",
+      "category": "Update teste",
+      "price": "2000.00",
+      "seller_id": "1c4caacf-0a59-409f-99b6-ff06cd88167c"
+    }
+  ]
 }
 ```
 
