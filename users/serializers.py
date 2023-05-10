@@ -28,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
             "address",
         ]
         depth = 2
-        read_only_fields = ["id", "is_superuser", "cart"]
+        read_only_fields = ["id", "cart"]
         extra_kwargs = {
             "username": {
                 "validators": [
@@ -53,6 +53,9 @@ class UserSerializer(serializers.ModelSerializer):
         if address_data:
             address = Address.objects.create(**address_data)
             validated_data["address"] = address
+
+        if validated_data["is_superuser"] == True:
+            return User.objects.create_superuser(**validated_data)
 
         return User.objects.create_user(**validated_data)
 
