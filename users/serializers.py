@@ -53,9 +53,9 @@ class UserSerializer(serializers.ModelSerializer):
         if address_data:
             address = Address.objects.create(**address_data)
             validated_data["address"] = address
-
-        if validated_data["is_superuser"] == True:
-            return User.objects.create_superuser(**validated_data)
+        if validated_data.__contains__("is_superuser"):
+            if validated_data["is_superuser"] == True:
+                return User.objects.create_superuser(**validated_data)
 
         return User.objects.create_user(**validated_data)
 
