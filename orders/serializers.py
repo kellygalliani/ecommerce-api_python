@@ -25,6 +25,7 @@ class OrderSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         for product in representation['product']:
+            product.pop('availability', None)
             product.pop('quantity', None)
         return representation
 
