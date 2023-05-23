@@ -8,8 +8,7 @@ Esse serviço possui uma API REST para que seja possível criar, logar, listar, 
 
 # Documentação:
 
-<a href="https://ecommerce-g35.onrender.com/api/docs/swagger/" >CLIQUE AQUI PARA ABRIR A DOCUMENTAÇÃO</a>
-
+<a href="https://ecommerce-g35.onrender.com/api/docs/swagger/" target="_blank">CLIQUE AQUI PARA ABRIR A DOCUMENTAÇÃO</a>
 
 # Instruções:
 
