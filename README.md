@@ -23,6 +23,11 @@ Esse serviço possui uma API REST para que seja possível criar, logar, listar, 
 
 - O banco de dados utilizado foi **PostgreSQL**.
 
+# Documentação:
+
+<a href="https://ecommerce-g35.onrender.com/api/docs/swagger/" >CLIQUE AQUI PARA ABRIR A DOCUMENTAÇÃO</a>
+
+
 # Instruções:
 
 - Para iniciar faça uma cópia do arquivo ".env.example", crie um Banco de Dados, preencha os campos necessários e nomeie o arquivo copiado para ".env".
