@@ -1,20 +1,3 @@
-# Integrantes:
-
-### Gabryel Martins - Scrum Master
-
-- linkedin: https://www.linkedin.com/in/gabryelmaraujo/
-
-### Gustavo Gussoni - Tech Leader
-
-- linkedin: https://www.linkedin.com/in/gustavogussoni/
-
-### Kelly Cristina - Code Reviewer
-
-- linkedin: https://www.linkedin.com/in/kelly-cristina-galliani/
-
-### Pablo Silva - Code Reviewer
-
-- linkedin: https://www.linkedin.com/in/pablo-silva-96901798/
 
 # Sobre:
 
@@ -1169,3 +1152,20 @@ python manage.py runserver
   ]
 }
 ```
+# Integrantes:
+
+### Gabryel Martins - Scrum Master
+
+- linkedin: https://www.linkedin.com/in/gabryelmaraujo/
+
+### Gustavo Gussoni - Tech Leader
+
+- linkedin: https://www.linkedin.com/in/gustavogussoni/
+
+### Kelly Cristina - Code Reviewer
+
+- linkedin: https://www.linkedin.com/in/kelly-cristina-galliani/
+
+### Pablo Silva - Code Reviewer
+
+- linkedin: https://www.linkedin.com/in/pablo-silva-96901798/
